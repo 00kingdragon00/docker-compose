@@ -34,7 +34,7 @@ services:
             count: all
             capabilities: [gpu]
     ports:
-      - 3000:3000
+      - 3000:8080
     volumes:
       - open-webui:/app/backend/data
     depends_on:
@@ -43,6 +43,7 @@ services:
       - main_network
 
 volumes:
+  open-webui: {}
   ollama:
     driver: local
     driver_opts:
