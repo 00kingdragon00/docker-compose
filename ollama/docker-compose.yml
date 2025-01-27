@@ -1,0 +1,55 @@
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    restart: always
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama:/root/.ollama
+    networks:
+      - main_network
+  
+  open-webui:
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:cuda
+    restart: always
+    build:
+      context: .
+      args:
+        OLLAMA_BASE_URL: '/ollama'
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+    ports:
+      - 3000:3000
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    networks:
+      - main_network
+
+volumes:
+  ollama:
+    driver: local
+    driver_opts:
+        type: none
+        device: "/host_mnt/d/Projects/Docker/volume/ollama"
+        o: bind
+
+networks:
+  main_network:
+    external: true

@@ -1,0 +1,33 @@
+services:
+  n8n:
+    container_name: n8n
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=n8n_db
+      - DB_POSTGRESDB_HOST=pgdb
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_USER=dragon
+      - DB_POSTGRESDB_PASSWORD=utkarshC2@
+      - GENERIC_TIMEZONE=Asia/Kolkata
+      - TZ=Asia/Kolkata
+    ports:
+      - 5678:5678
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ecom_data:/mnt
+    networks:
+      - main_network
+volumes:
+  n8n_data:
+    external: true
+  ecom_data:
+      driver: local
+      driver_opts:
+          type: none
+          device: "/host_mnt/e/Ecommerce"
+          o: bind
+networks:
+  main_network:
+    external: true
