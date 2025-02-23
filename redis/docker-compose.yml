@@ -1,0 +1,18 @@
+services:
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save "" --appendonly no
+    volumes: 
+      - redis_data:/data
+    networks:
+      - main_network
+volumes:
+  redis_data:
+    external: true
+networks:
+  main_network:
+    external: true

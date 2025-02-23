@@ -1,0 +1,25 @@
+services:
+  jesse:
+    image: salehmir/jesse:latest
+    tty: true
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"
+      - "8888:8888"
+    volumes:
+      - jesse_data:/home
+    container_name: jesse
+    command: bash -c "jesse install-live --no-strict && jesse run"
+    networks:
+      - main_network
+volumes:
+  jesse_data:
+    driver: local
+    driver_opts:
+        type: none
+        device: "/host_mnt/d/Projects/AlgoTrading/Jesse Trade"
+        o: bind
+networks:
+  main_network:
+    external: true
