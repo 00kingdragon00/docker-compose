@@ -1,0 +1,18 @@
+services:
+  influxdb:
+    image: influxdb:latest
+    volumes:
+      - influxdb_data:/var/lib/influxdb2:rw
+    ports:
+      - "8086:8086"
+    networks:
+      - main_network
+
+volumes:
+  influxdb_data:
+    external: true
+
+networks:
+  main_network:
+    external: true
+    
