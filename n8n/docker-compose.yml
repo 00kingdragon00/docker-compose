@@ -8,8 +8,8 @@ services:
       - DB_POSTGRESDB_DATABASE=n8n_db
       - DB_POSTGRESDB_HOST=pgdb
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_USER=dragon
-      - DB_POSTGRESDB_PASSWORD=utkarshC2@
+      - DB_POSTGRESDB_USER=<placeholder>
+      - DB_POSTGRESDB_PASSWORD=<placeholder>
       - GENERIC_TIMEZONE=Asia/Kolkata
       - TZ=Asia/Kolkata
     ports:
