@@ -2,19 +2,27 @@ services:
   jesse:
     image: salehmir/jesse:latest
     tty: true
-    env_file:
-      - .env
+    environment:
+      - PASSWORD=<placeholder>
+      - APP_PORT=9000
+      - POSTGRES_HOST=postgres_db_2
+      - POSTGRES_NAME=jesse_db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USERNAME=<placeholder>
+      - POSTGRES_PASSWORD=<placeholder>
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     ports:
       - "9000:9000"
       - "8888:8888"
     volumes:
-      - jesse_data:/home
+      - jesse_data_2:/home
     container_name: jesse
     command: bash -c "jesse install-live --no-strict && jesse run"
     networks:
       - main_network
 volumes:
-  jesse_data:
+  jesse_data_2:
     driver: local
     driver_opts:
         type: none
