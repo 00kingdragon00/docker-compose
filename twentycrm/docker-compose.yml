@@ -1,0 +1,67 @@
+name: twenty
+
+services:
+  change-vol-ownership:
+    image: ubuntu
+    user: root
+    volumes:
+      - twenty-server-local-data:/tmp/server-local-data
+      - twenty-docker-data:/tmp/docker-data
+    command: >
+      bash -c "
+      chown -R 1000:1000 /tmp/server-local-data
+      && chown -R 1000:1000 /tmp/docker-data"
+    networks:
+      - main_network
+      
+  server:
+    image: twentycrm/twenty:${TAG:-latest}
+    container_name: twentycrm
+    volumes:
+      - twenty-server-local-data:/app/packages/twenty-server/${STORAGE_LOCAL_PATH:-.local-storage}
+      - twenty-docker-data:/app/docker-data
+    ports:
+      - "4005:3000"
+    environment:
+      NODE_PORT: 3000
+      PG_DATABASE_URL: postgres://dragon:utkarshC2#@postgres_db:5432/twentycrm
+      SERVER_URL: ${SERVER_URL}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      APP_SECRET: ${APP_SECRET:-klasodham3w49eufdaga}
+    depends_on:
+      change-vol-ownership:
+        condition: service_completed_successfully
+    healthcheck:
+      test: curl --fail http://twentycrm:3000/healthz
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    networks:
+      - main_network
+      
+  worker:
+    image: twentycrm/twenty:${TAG:-latest}
+    command: ["yarn", "worker:prod"]
+    environment:
+      PG_DATABASE_URL: postgres://dragon:utkarshC2#@postgres_db:5432/twentycrm
+      SERVER_URL: ${SERVER_URL}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
+      STORAGE_TYPE: ${STORAGE_TYPE}
+      APP_SECRET: ${APP_SECRET}
+    depends_on:
+      server:
+        condition: service_healthy
+    restart: always
+    networks:
+      - main_network
+
+volumes:
+  twenty-docker-data:
+  twenty-server-local-data:
+
+networks:
+  main_network:
+    external: true
