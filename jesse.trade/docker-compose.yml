@@ -8,7 +8,7 @@ services:
       - POSTGRES_HOST=postgres_db_2
       - POSTGRES_NAME=jesse_db
       - POSTGRES_PORT=5432
-      - POSTGRES_USERNAME=<placeholder>
+      - POSTGRES_USERNAME=<placeholde>
       - POSTGRES_PASSWORD=<placeholder>
       - REDIS_HOST=redis
       - REDIS_PORT=6379
