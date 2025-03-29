@@ -4,10 +4,14 @@ services:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_PASSWORD=utkarshC2@
+      - POSTGRES_PASSWORD=<placeholder>
       - POSTGRES_USER=dragon
+    ports:
+      - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - pgdata_lib:/usr/lib/postgresql
+      - pgdata_share:/usr/share/postgresql
     networks:
       - main_network
 
@@ -16,11 +20,15 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 4001:8080
     networks:
       - main_network
 
 volumes:
+  pgdata_share:
+    external: true
+  pgdata_lib:
+    external: true
   pgdata:
     external: true
 networks:
