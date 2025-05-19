@@ -1,0 +1,24 @@
+services:
+  mt5:
+    # image: gmag11/metatrader5_vnc:latest
+    image: debian:bullseye-slim
+    container_name: mt5_test
+    command: sleep infinity
+    # volumes:
+    #   - mt5_data:/config
+    ports:
+      - 3000:3000
+    #   - 8001:8001
+    # environment:
+    #   - CUSTOM_USER=<placeholder>
+    #   - PASSWORD=<placeholder>
+    networks:
+      - main_network
+
+volumes:
+  mt5_data:
+    external: true
+
+networks:
+  main_network:
+    external: true

@@ -1,0 +1,50 @@
+name: affine
+services:
+  affine:
+    image: ghcr.io/toeverything/affine-graphql:${AFFINE_REVISION:-stable}
+    container_name: affine_server
+    depends_on:
+      affine_migration:
+        condition: service_completed_successfully
+    volumes:
+      - affine_data:/root/.affine/storage
+      - affine_config:/root/.affine/config
+    env_file:
+      - .env
+    environment:
+      - REDIS_SERVER_HOST=redis
+      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres_db:5432/${DB_DATABASE:-affine}
+      - AFFINE_SERVER_HOST=${AFFINE_SERVER_HOST}
+      - AFFINE_SERVER_PORT=${AFFINE_SERVER_PORT}
+      - AFFINE_SERVER_HTTPS=${AFFINE_SERVER_HTTPS}
+      - MAILER_HOST=${MAILER_HOST}
+      - MAILER_PORT=${MAILER_PORT}
+      - MAILER_USER=${MAILER_USER}
+      - MAILER_PASSWORD=${MAILER_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - main_network
+  affine_migration:
+    image: ghcr.io/toeverything/affine-graphql:${AFFINE_REVISION:-stable}
+    container_name: affine_migration_job
+    volumes:
+      - affine_data:/root/.affine/storage
+      - affine_config:/root/.affine/config
+    command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
+    env_file:
+      - .env
+    environment:
+      - REDIS_SERVER_HOST=redis
+      - DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@postgres_db:5432/${DB_DATABASE:-affine}
+    networks:
+      - main_network
+
+volumes:
+  affine_data:
+    external: true
+  affine_config:
+    external: true
+
+networks:
+  main_network:
+    external: true

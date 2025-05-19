@@ -1,0 +1,18 @@
+services:
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ee
+    container_name: appsmith
+    ports:
+      - "4005:80"
+    volumes:
+      - appsmith_data:/appsmith-stacks
+    restart: unless-stopped
+    networks:
+      - main_network
+volumes:
+  appsmith_data:
+    external: true
+
+networks:
+  main_network:
+    external: true

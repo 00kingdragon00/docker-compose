@@ -1,0 +1,14 @@
+services:
+  web:
+    image: odoo:18.0
+    volumes:
+      - odoo_data:/var/lib/odoo
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=mydb
+      - USER=odoo
+      - PASSWORD=myodoo 
+volumes:
+  odoo_data:
+    external: true

@@ -1,0 +1,28 @@
+
+services:
+  kasm:
+    image: ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble-e7c3e0c8-ls57
+    container_name: kasm
+    privileged: true
+    security_opt:
+      - apparmor:rootlesskit #optional
+    # environment:
+    #   - KASM_PORT=443
+    #   - DOCKER_HUB_USERNAME=USER #optional
+    #   - DOCKER_HUB_PASSWORD=PASS #optional
+    #   - DOCKER_MTU=1500 #optional
+    # volumes:
+      # - /path/to/data:/opt
+      # - /path/to/profiles:/profiles #optional
+      # - /dev/input:/dev/input #optional
+      # - /run/udev/data:/run/udev/data #optional
+    ports:
+      - 3000:3000
+      # - 443:443
+    restart: unless-stopped
+    networks:
+      - main_network
+
+networks:
+  main_network:
+    external: true
