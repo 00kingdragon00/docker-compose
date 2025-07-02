@@ -8,25 +8,25 @@ services:
       - DB_POSTGRESDB_DATABASE=n8n_db
       - DB_POSTGRESDB_HOST=pgdb
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_USER=<placeholder>
-      - DB_POSTGRESDB_PASSWORD=<placeholder>
+      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
       - GENERIC_TIMEZONE=Asia/Kolkata
       - TZ=Asia/Kolkata
     ports:
       - 5678:5678
     volumes:
       - n8n_data:/home/node/.n8n
-      - ecom_data:/mnt
+      - mount_data:/mnt
     networks:
       - main_network
 volumes:
   n8n_data:
     external: true
-  ecom_data:
+  mount_data:
       driver: local
       driver_opts:
           type: none
-          device: "/host_mnt/e/Ecommerce"
+          device: <placeholder>
           o: bind
 networks:
   main_network:
