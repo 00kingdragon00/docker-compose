@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  clickhouse-server:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse-server
+    hostname: clickhouse-server
+    ports:
+      - "8123:8123" 
+      - "9000:9000" 
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse/
+      - .users.xml:/etc/clickhouse-server/users.d/users.xml
+      - .config.xml:/etc/clickhouse-server/config.d/config.xml
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - main_network
+
+  clickhouse-client:
+    image: clickhouse/clickhouse-client:latest
+    container_name: clickhouse-client
+    depends_on:
+      clickhouse-server:
+        condition: service_healthy
+    entrypoint:
+      - sleep
+      - infinity
+    networks:
+      - main_network
+
+volumes:
+  clickhouse_data:
+    external: true
+
+networks:
+  main_network:
+    external: true
